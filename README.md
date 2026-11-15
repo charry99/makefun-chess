@@ -1,24 +1,28 @@
-# Tiny Chess Engine
+# Tiny Chess: Variant E
 
-This entry searches legal chess moves with a compact alpha-beta engine.
-It includes a position table for repetitions encountered during the game.
-Positions seen before are scored as draws during search.
-This helps the engine avoid lines that repeat and lose winning chances.
-The table resets when a new game begins.
+This entry builds on the compact chess engine with three evaluation and search improvements.
 
-Static evaluation gives a 30 point bonus for owning a pair of bishops.
-Two bishops can control both square colours and work well together.
-The bonus helps the engine recognize that long term strength.
+Search tracks positions seen during the current game.
+Repeated positions score as draws, helping the engine avoid cycling.
+The repetition table resets when a new game begins.
 
-The search is capped at 100,000 nodes per move.
-Practice results were 1253 Elo in trial-0 and 1253 in trial-1.
-Trial-2 scored 1396 Elo.
-The three trial scores average 1301 Elo.
+The evaluation adds 30 points for a bishop pair.
+That rewards retaining both bishops when the position supports them.
 
-Perft matched the start position counts 20, 400, and 8902.
-Kiwipete matched 48 and 2039 nodes at depths one and two.
-The bestmove check returned b1c3 at the node cap.
-The packed source round trip was checked for byte identity.
+Passed pawns receive a 25 point bonus for the most advanced passer on each file, per side.
+This helps the engine recognize pawns that can advance toward promotion.
 
-The source has been re-packed with 300-character payload chunks.
-Perft and bestmove checks still pass after the re-pack.
+The move request includes both the game number and the selected move.
+Search uses the measured node cap of 100000.
+
+Practice results were 1362 Elo in trial 0, 1326 in trial 1, and 1290 in trial 2.
+The mean was 1326 Elo, compared with 1301 for the previous best build.
+
+Start position perft passed at depths 1 through 3: 20, 400, and 8902.
+Kiwipete perft passed at depths 1 and 2: 48 and 2039.
+The bestmove check returned b1c3, and the packed source round trip matched byte for byte.
+
+After the initial write, the entry was verified again: the packed source matched,
+both perft checks were clean, and the bestmove check passed.
+The entry file was deliberately left untouched in this revision to preserve its
+size margin under the 4096 byte limit.
